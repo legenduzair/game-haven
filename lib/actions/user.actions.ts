@@ -11,17 +11,16 @@ import User from "../database/models/user.model";
 import { handleError } from "../utils";
 
 // User Creation Function
-export const createUser = async (user: CreateUserParams) => {
-    try {
-        await connectToDatabase();
+export async function createUser(user: CreateUserParams) {
+  try {
+    await connectToDatabase()
 
-        const newUser = await User.create(user);
-
-        return JSON.parse(JSON.stringify(newUser));
-    } catch (error) {
-        handleError(error)
-    }
-};
+    const newUser = await User.create(user)
+    return JSON.parse(JSON.stringify(newUser))
+  } catch (error) {
+    handleError(error)
+  }
+}
 
 // User Update Function
 export async function updateUser(clerkId: string, user: UpdateUserParams) {
