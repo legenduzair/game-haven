@@ -243,9 +243,6 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                       height={24}
                       className="filter-grey"
                     />
-                    <p className="ml-3 whitespace-nowrap text-gray-600">
-                      End Date:
-                    </p>
                     <Input
                       type="number"
                       placeholder="Price"
@@ -266,7 +263,8 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                               className="whitespace-nowrap pr-3 leading-none
                               peer-disabled:cursor-not-allowed
                               peer-disabled:opacity-70">Free Ticket</label>
-                              <Checkbox id="isFree"
+                              <Checkbox onCheckedChange={field.onChange}
+                              checked={field.value} id="isFree"
                               className="mr-2 h-5 w-5 border-2 border-primary-500" />
                             </div>
                           </FormControl>
@@ -314,8 +312,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           disabled={form.formState.isSubmitting}
           className="button col-span-2 w-full"
         >
-          {form.formState.isSubmitting? "Submitting..." : `${type} Event`}
-        </Button>
+          {form.formState.isSubmitting ? ("Submitting...") : `${type} Event`}</Button>
       </form>
     </Form>
   );
