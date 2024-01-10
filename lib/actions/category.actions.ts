@@ -7,7 +7,7 @@ import { handleError } from "../utils"
 
 export const createCategory = async ({ categoryName }: CreateCategoryParams) => {
     try {
-        await connectToDatabase()
+        await connectToDatabase();
 
         const newCategory = await Category.create({ name: categoryName });
         return JSON.parse(JSON.stringify(newCategory));

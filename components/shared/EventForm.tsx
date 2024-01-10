@@ -25,9 +25,13 @@ import Dropdown from "./Dropdown";
 import { FileUploader } from "./FileUploader";
 import { useState } from "react";
 import Image from "next/image";
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Check } from "lucide-react";
+
+import { useUploadThing } from "@/lib/uploadthing"
+import { useRouter } from "next/navigation";
+import { createEvent } from "@/lib/actions/event.actions";
 
 type EventFormProps = {
   userId: string;
@@ -37,6 +41,9 @@ type EventFormProps = {
 const EventForm = ({ userId, type }: EventFormProps) => {
   const [files, setFiles] = useState<File[]>([]);
   const initialValues = eventDefaultValues;
+  const router = useRouter();
+
+  const { startUpload } = useUploadThing('imageUploader');
 
   // Define your form.
   const form = useForm<z.infer<typeof eventFormSchema>>({
@@ -45,8 +52,36 @@ const EventForm = ({ userId, type }: EventFormProps) => {
   });
 
   // Define a submit handler.
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof eventFormSchema>) {
+
+    let uploadedImageUrl = values.imageUrl;
+
+    if(files.length > 0) {
+      const uploadedImages = await startUpload(files)
+
+      if(!uploadedImages) {
+        return
+      }
+
+      uploadedImageUrl = uploadedImages[0].url
+    }
+
+    if(type === 'Create') {
+      try {
+        const newEvent = await createEvent({
+          event: {...values, imageUrl: uploadedImageUrl },
+          userId,
+          path: '/profile'
+        })
+
+        if(newEvent) {
+          form.reset();
+          router.push(`/events/${newEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
   return (
@@ -307,12 +342,15 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           />
         </div>
 
-        <Button type="submit" 
+        <Button 
+          type="submit"
           size="lg"
           disabled={form.formState.isSubmitting}
           className="button col-span-2 w-full"
         >
-          {form.formState.isSubmitting ? ("Submitting...") : `${type} Event`}</Button>
+          {form.formState.isSubmitting ? (
+            'Submitting...'
+          ): `${type} Event `}</Button>
       </form>
     </Form>
   );
