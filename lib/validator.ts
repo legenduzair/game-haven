@@ -11,5 +11,4 @@ export const eventFormSchema = z.object({
   isFree: z.boolean(),
   url: z.string().url(),
   categoryId: z.string(),
-  organiser: z.string()
 })
