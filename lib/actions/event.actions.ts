@@ -1,6 +1,7 @@
 'use server'
 
-import { CreateEventParams, GetAllEventsParams } from "@/types"
+import { CreateEventParams, DeleteEventParams, GetAllEventsParams } from "@/types"
+import { revalidatePath } from "next/cache"
 
 import { connectToDatabase } from "../database"
 
@@ -85,3 +86,15 @@ export const getAllEvents = async ({ query, limit = 6, page, category}: GetAllEv
         handleError(error);
     }
 } 
+
+export const deleteEvent = async ({ eventId, path }: DeleteEventParams) => {
+    try {
+        await connectToDatabase();
+        
+        const deletedEvent = await Event.findByIdAndDelete(eventId);
+
+        if(deletedEvent) revalidatePath(path);        
+    } catch (error) {
+        handleError(error);
+    }
+}
