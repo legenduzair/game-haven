@@ -1,6 +1,6 @@
 'use server'
 
-import { CreateEventParams } from "@/types"
+import { CreateEventParams, GetAllEventsParams } from "@/types"
 
 import { connectToDatabase } from "../database"
 
@@ -47,7 +47,7 @@ export const createEvent = async ({ event, userId, path }: CreateEventParams) =>
 
 export const getEventById = async ( eventId: string ) => {
     try {
-        connectToDatabase();
+        await connectToDatabase();
         
         const event = await populateEvent(Event.findById(eventId));
 
@@ -61,3 +61,27 @@ export const getEventById = async ( eventId: string ) => {
         handleError(error);
     }
 }
+
+export const getAllEvents = async ({ query, limit = 6, page, category}: GetAllEventsParams) => {
+    try {
+        await connectToDatabase();
+
+        const conditions = {};
+
+        const eventsQuery = Event.find(conditions)
+          .sort({ createdAt: 'desc'})
+          .skip(0)
+          .limit(limit)
+
+        const events = await populateEvent(eventsQuery);
+        const eventsCount = await Event.countDocuments(conditions);
+        
+        return {
+            data: JSON.parse(JSON.stringify(events)),
+            totalPages: Math.ceil(eventsCount / limit),
+        }
+        
+    } catch (error) {
+        handleError(error);
+    }
+} 
