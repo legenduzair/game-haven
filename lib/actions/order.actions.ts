@@ -133,7 +133,7 @@ export async function getOrdersByUser({ userId, limit = 3, page }: GetOrdersByUs
         path: 'event',
         model: Event,
         populate: {
-          path: 'organizer',
+          path: 'organiser',
           model: User,
           select: '_id firstName lastName',
         },
