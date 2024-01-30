@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: 'Game Haven',
   description: 'Game Haven is a platform for video game event management.',
   icons : {
-    icon: '/assets/images/logo.svg'
+    icon: '/assets/images/game-logo.png'
   }
 }
 

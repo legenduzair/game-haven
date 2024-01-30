@@ -34,10 +34,19 @@ export default async function Home({ searchParams}: SearchParamProps) {
             </Button>
           </div>
 
-          <Image src="/assets/images/hero.png"
+          <Image src="/assets/images/hero-h.jpg"
           alt="hero"
           width={1000}
           height={1000}
+          id="hero-h"
+          className="max-h-[70vh] object-contain object-center
+          2xl:max-h-[50vh]"/>
+
+          <Image src="/assets/images/hero.jpg"
+          alt="hero"
+          width={1000}
+          height={1000}
+          id="hero-v"
           className="max-h-[70vh] object-contain object-center
           2xl:max-h-[50vh]"/>
         </div>
